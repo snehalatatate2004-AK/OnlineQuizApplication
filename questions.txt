@@ -1,0 +1,20 @@
+What is JVM?
+Java Virtual Machine
+Java Vendor Machine
+Java Variable Method
+None
+1
+
+Which collection allows duplicates?
+Set
+Map
+ArrayList
+TreeSet
+3
+
+Which keyword is used for inheritance?
+implement
+extends
+super
+this
+2
