@@ -10,7 +10,7 @@ public class Question {
 
     private int correctAnswer;
 
-    // Constructor used here
+    // Constructor is used 
 
     public Question(String question,
                     String option1,
@@ -53,5 +53,28 @@ public class Question {
 
     public int getCorrectAnswer() {
         return correctAnswer;
+    }
+
+        // Method used to return actual correct option text
+
+    public String getCorrectOptionText() {
+
+        switch (correctAnswer) {
+
+            case 1:
+                return option1;
+
+            case 2:
+                return option2;
+
+            case 3:
+                return option3;
+
+            case 4:
+                return option4;
+
+            default:
+                return "Invalid Option";
+        }
     }
 }

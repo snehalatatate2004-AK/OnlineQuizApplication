@@ -1,21 +1,35 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class QuizService {
 
-    // ArrayList reference variable
+    // Constant variable
+    // Stores score history file name
+
+    private static final String SCORE_FILE =
+            "scoreHistory.txt";
+
+    // Single Scanner object
+    // Best practice
+
+    private static Scanner sc =
+            new Scanner(System.in);
+
     // Stores all question objects
 
     private ArrayList<Question> questionList;
 
     // Stores user score
 
-    private int score = 0;
+    private int score;
 
     // Constructor used here
-    // Constructor initializes question list
 
-    public QuizService(ArrayList<Question> questions) {
+    public QuizService(
+            ArrayList<Question> questions) {
 
         this.questionList = questions;
     }
@@ -24,132 +38,202 @@ public class QuizService {
 
     public void startQuiz() {
 
-        // Reset score before starting new quiz
+        // Reset score
+
         score = 0;
 
-        Scanner sc = new Scanner(System.in);
+        // Randomize question order
 
-        // ArrayList stores wrong answered questions
+        Collections.shuffle(questionList);
+
+        // Start timer
+
+        long startTime =
+                System.currentTimeMillis();
+
+        // Stores wrong answered questions
 
         ArrayList<String> wrongAnswers =
                 new ArrayList<>();
 
-        System.out.println("\n===== QUIZ STARTED =====\n");
+        System.out.println(
+                "\n===== QUIZ STARTED =====\n");
 
-        // for loop used for traversing ArrayList
+        // Traversing question list
 
-        for (int i = 0; i < questionList.size(); i++) {
+        for (int i = 0;
+             i < questionList.size();
+             i++) {
 
-            // Fetching current question object
+            // Fetch current question
 
-            Question q = questionList.get(i);
+            Question currentQuestion =
+                    questionList.get(i);
 
-            // Displaying question
+            // Display question
 
-            System.out.println("Question " + (i + 1));
+            displayQuestion(
+                    currentQuestion,
+                    i + 1);
 
-            System.out.println(q.getQuestion());
+            // Take validated answer
 
-            // Displaying options
+            int userAnswer =
+                    getValidatedAnswer();
 
-            System.out.println("1. " + q.getOption1());
+            // Check answer
 
-            System.out.println("2. " + q.getOption2());
-
-            System.out.println("3. " + q.getOption3());
-
-            System.out.println("4. " + q.getOption4());
-
-            int userAnswer = 0;
-
-            // Infinite loop for input validation
-
-            while (true) {
-
-                try {
-
-                    System.out.print("Enter your answer (1-4): ");
-
-                    // Taking integer input
-
-                    userAnswer = sc.nextInt();
-
-                    // Validation logic
-
-                    if (userAnswer < 1 || userAnswer > 4) {
-
-                        // Custom exception throwing
-
-                        throw new IllegalArgumentException();
-                    }
-
-                    // Break loop if valid input
-
-                    break;
-
-                } catch (IllegalArgumentException e) {
-
-                    System.out.println(
-                            "Answer must be between 1 and 4");
-
-                } catch (Exception e) {
-
-                    System.out.println(
-                            "Invalid input! Numbers only.");
-
-                    // Clears invalid input buffer
-
-                    sc.nextLine();
-                }
-            }
-
-            // Answer checking logic
-
-            if (userAnswer == q.getCorrectAnswer()) {
-
-                score++;
-
-                System.out.println("Correct Answer!\n");
-
-            } else {
-
-                System.out.println("Wrong Answer!");
-
-                System.out.println(
-                        "Correct Answer is: "
-                        + q.getCorrectAnswer());
-
-                // Adding wrong question into ArrayList
-
-                wrongAnswers.add(q.getQuestion());
-
-                System.out.println();
-            }
+            checkAnswer(
+                    currentQuestion,
+                    userAnswer,
+                    wrongAnswers);
         }
 
-        // Calling result method
+        // End timer
 
-        showResult(wrongAnswers);
+        long endTime =
+                System.currentTimeMillis();
+
+        // Calculate total time
+
+        long totalTime =
+                (endTime - startTime) / 1000;
+
+        // Show final result
+
+        showResult(
+                wrongAnswers,
+                totalTime);
     }
 
-    // Method used for displaying final result
+    // Method used to display question
 
-    public void showResult(ArrayList<String> wrongAnswers) {
+    public void displayQuestion(
+            Question q,
+            int questionNumber) {
 
-        int totalQuestions = questionList.size();
+        System.out.println(
+                "Question " + questionNumber);
 
-        // Type casting used here
+        System.out.println(
+                q.getQuestion());
+
+        System.out.println(
+                "1. " + q.getOption1());
+
+        System.out.println(
+                "2. " + q.getOption2());
+
+        System.out.println(
+                "3. " + q.getOption3());
+
+        System.out.println(
+                "4. " + q.getOption4());
+    }
+
+    // Method used for validated input
+
+    public int getValidatedAnswer() {
+
+        int userAnswer;
+
+        while (true) {
+
+            try {
+
+                System.out.print(
+                        "Enter your answer (1-4): ");
+
+                userAnswer =
+                        sc.nextInt();
+
+                // Validation
+
+                if (userAnswer < 1
+                        || userAnswer > 4) {
+
+                    throw new IllegalArgumentException();
+                }
+
+                return userAnswer;
+
+            } catch (IllegalArgumentException e) {
+
+                System.out.println(
+                        "Answer must be between 1 and 4");
+
+            } catch (Exception e) {
+
+                System.out.println(
+                        "Invalid input! Numbers only.");
+
+                sc.nextLine();
+            }
+        }
+    }
+
+    // Method used for answer checking
+
+    public void checkAnswer(
+            Question q,
+            int userAnswer,
+            ArrayList<String> wrongAnswers) {
+
+        if (userAnswer
+                == q.getCorrectAnswer()) {
+
+            score++;
+
+            System.out.println(
+                    "Correct Answer!\n");
+
+        } else {
+
+            System.out.println(
+                    "Wrong Answer!");
+
+            System.out.println(
+                    "Correct Answer is: "
+                            + q.getCorrectOptionText());
+
+            // Store wrong question
+
+            wrongAnswers.add(
+                    q.getQuestion());
+
+            System.out.println();
+        }
+    }
+
+    // Method used to display result
+
+    public void showResult(
+            ArrayList<String> wrongAnswers,
+            long totalTime) {
+
+        int totalQuestions =
+                questionList.size();
+
+        // Percentage calculation
 
         double percentage =
-                ((double) score / totalQuestions) * 100;
+                ((double) score
+                        / totalQuestions) * 100;
 
-        System.out.println("\n===== FINAL RESULT =====");
+        // Save history
+
+        saveScoreHistory(percentage);
 
         System.out.println(
-                "Total Questions : " + totalQuestions);
+                "\n===== FINAL RESULT =====");
 
         System.out.println(
-                "Correct Answers : " + score);
+                "Total Questions : "
+                        + totalQuestions);
+
+        System.out.println(
+                "Correct Answers : "
+                        + score);
 
         System.out.println(
                 "Wrong Answers   : "
@@ -159,38 +243,98 @@ public class QuizService {
                 "Percentage      : "
                         + percentage + "%");
 
-        // Grade calculation logic
+        System.out.println(
+                "Time Taken      : "
+                        + totalTime + " seconds");
+
+        // Display grade
+
+        System.out.println(
+                "Grade : "
+                        + calculateGrade(percentage));
+
+        // Display wrong answers
+
+        displayWrongAnswers(wrongAnswers);
+    }
+
+    // Method used to calculate grade
+
+    public String calculateGrade(
+            double percentage) {
 
         if (percentage >= 80) {
 
-            System.out.println("Grade : Excellent");
+            return "Excellent";
 
         } else if (percentage >= 60) {
 
-            System.out.println("Grade : Good");
+            return "Good";
 
         } else if (percentage >= 40) {
 
-            System.out.println("Grade : Average");
-
-        } else {
-
-            System.out.println("Grade : Need Improvement");
+            return "Average";
         }
 
-        // Displaying wrong answered questions
+        return "Need Improvement";
+    }
+
+    // Method used to display wrong answers
+
+    public void displayWrongAnswers(
+            ArrayList<String> wrongAnswers) {
 
         if (!wrongAnswers.isEmpty()) {
 
             System.out.println(
                     "\nWrongly Answered Questions:");
 
-            // Enhanced for loop used here
+            for (String question
+                    : wrongAnswers) {
 
-            for (String question : wrongAnswers) {
-
-                System.out.println("- " + question);
+                System.out.println(
+                        "- " + question);
             }
+        }
+    }
+
+    // Method used to save score history
+
+    public void saveScoreHistory(
+            double percentage) {
+
+        sc.nextLine();
+
+        System.out.print(
+                "Enter your name: ");
+
+        String name =
+                sc.nextLine();
+
+        try {
+
+            // Append mode enabled
+
+            FileWriter fw =
+                    new FileWriter(
+                            SCORE_FILE,
+                            true);
+
+            fw.write(
+                    "Name : "
+                            + name
+                            + " | Score : "
+                            + percentage
+                            + "%\n");
+
+            // Close resource
+
+            fw.close();
+
+        } catch (IOException e) {
+
+            System.out.println(
+                    "Error saving score history!");
         }
     }
 }

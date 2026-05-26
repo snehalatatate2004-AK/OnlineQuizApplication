@@ -18,3 +18,38 @@ extends
 super
 this
 2
+
+What is the parent class of all classes in Java?
+String
+Object
+Class
+Main
+2
+
+Which keyword is used to achieve abstraction in Java?
+extends
+final
+abstract
+static
+3
+
+Which collection does NOT allow duplicate elements?
+ArrayList
+LinkedList
+Vector
+HashSet
+4
+
+Which exception occurs when dividing a number by zero in Java?
+IOException
+ArithmeticException
+NullPointerException
+ClassNotFoundException
+2
+
+Which memory area stores objects in Java?
+Stack
+Heap
+Method Area
+CPU Cache
+2
