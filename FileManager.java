@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class FileManager {
 
-    // Static method used here
-    // This method loads questions from file
+    
+    // This method loads questions from the file
 
     public static ArrayList<Question> loadQuestions(String fileName) {
 
@@ -17,19 +17,17 @@ public class FileManager {
 
         try {
 
-            // FileReader reads file characters
+            
             FileReader fr = new FileReader(fileName);
 
-            // BufferedReader improves performance
             BufferedReader br = new BufferedReader(fr);
 
             String question;
 
-            // Loop runs until file ends
+            // Loop runs until the file ends
 
             while ((question = br.readLine()) != null) {
 
-                // Reading options from file
 
                 String option1 = br.readLine();
                 String option2 = br.readLine();
@@ -41,7 +39,7 @@ public class FileManager {
                 int correctAnswer =
                         Integer.parseInt(br.readLine());
 
-                // Constructor called here
+                // here Constructor is called and 
                 // Object creation
 
                 Question q = new Question(
@@ -57,24 +55,15 @@ public class FileManager {
 
                 questionList.add(q);
 
-                // Extra line skipped between questions
-
-                br.readLine();
+                br.readLine();// extra line skip keliy
             }
-
-            // Closing resources
-            // Best practice in industry
 
             br.close();
 
         } catch (IOException e) {
 
-            // Exception handling used here
-
             System.out.println("Error reading file!");
         }
-
-        // Returning question list
 
         return questionList;
     }

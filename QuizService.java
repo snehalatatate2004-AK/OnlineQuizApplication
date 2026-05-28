@@ -6,27 +6,19 @@ import java.io.IOException;
 
 public class QuizService {
 
-    // Constant variable
     // Stores score history file name
 
     private static final String SCORE_FILE =
             "scoreHistory.txt";
 
-    // Single Scanner object
-    // Best practice
+    // Scanner object
 
     private static Scanner sc =
             new Scanner(System.in);
 
-    // Stores all question objects
-
     private ArrayList<Question> questionList;
 
-    // Stores user score
-
     private int score;
-
-    // Constructor used here
 
     public QuizService(
             ArrayList<Question> questions) {
@@ -34,24 +26,20 @@ public class QuizService {
         this.questionList = questions;
     }
 
-    // Method used to start quiz
-
     public void startQuiz() {
 
         // Reset score
 
         score = 0;
 
-        // Randomize question order
+        //  here questions are in randomize order
 
         Collections.shuffle(questionList);
-
-        // Start timer
 
         long startTime =
                 System.currentTimeMillis();
 
-        // Stores wrong answered questions
+        //  here wrong answered questions are Stored
 
         ArrayList<String> wrongAnswers =
                 new ArrayList<>();
@@ -59,13 +47,11 @@ public class QuizService {
         System.out.println(
                 "\n===== QUIZ STARTED =====\n");
 
-        // Traversing question list
-
         for (int i = 0;
              i < questionList.size();
              i++) {
 
-            // Fetch current question
+            // Fetch the current question
 
             Question currentQuestion =
                     questionList.get(i);
@@ -147,8 +133,6 @@ public class QuizService {
                 userAnswer =
                         sc.nextInt();
 
-                // Validation
-
                 if (userAnswer < 1
                         || userAnswer > 4) {
 
@@ -205,7 +189,7 @@ public class QuizService {
         }
     }
 
-    // Method used to display result
+    // Method for display result
 
     public void showResult(
             ArrayList<String> wrongAnswers,
@@ -220,12 +204,12 @@ public class QuizService {
                 ((double) score
                         / totalQuestions) * 100;
 
-        // Save history
+        // Saves the history
 
         saveScoreHistory(percentage);
 
         System.out.println(
-                "\n===== FINAL RESULT =====");
+                "\n...FINAL RESULT...");
 
         System.out.println(
                 "Total Questions : "
@@ -253,12 +237,12 @@ public class QuizService {
                 "Grade : "
                         + calculateGrade(percentage));
 
-        // Display wrong answers
+        // Display the wrong answers
 
         displayWrongAnswers(wrongAnswers);
     }
 
-    // Method used to calculate grade
+    //  calculate grade
 
     public String calculateGrade(
             double percentage) {
@@ -279,7 +263,7 @@ public class QuizService {
         return "Need Improvement";
     }
 
-    // Method used to display wrong answers
+    // Method for display wrong answers
 
     public void displayWrongAnswers(
             ArrayList<String> wrongAnswers) {
@@ -298,7 +282,7 @@ public class QuizService {
         }
     }
 
-    // Method used to save score history
+    // save score history
 
     public void saveScoreHistory(
             double percentage) {
@@ -312,9 +296,6 @@ public class QuizService {
                 sc.nextLine();
 
         try {
-
-            // Append mode enabled
-
             FileWriter fw =
                     new FileWriter(
                             SCORE_FILE,
@@ -326,8 +307,6 @@ public class QuizService {
                             + " | Score : "
                             + percentage
                             + "%\n");
-
-            // Close resource
 
             fw.close();
 

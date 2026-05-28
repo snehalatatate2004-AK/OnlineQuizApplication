@@ -5,28 +5,19 @@ import java.io.IOException;
 
 public class Main {
 
-    // Constant variable used here
-    // Stores file name
-
     private static final String FILE_NAME =
             "questions.txt";
 
-    // Single Scanner object
-    // Best practice used in industry
+    // Single Scanner object is used instead of using multiple
 
     private static Scanner sc =
             new Scanner(System.in);
-
-    // Main method -> execution starts here
-
     public static void main(String[] args) {
 
-        // Load questions from file
+        // Here questions are load from the file
 
         ArrayList<Question> questions =
                 FileManager.loadQuestions(FILE_NAME);
-
-        // Check if questions exist
 
         if (questions.isEmpty()) {
 
@@ -34,17 +25,15 @@ public class Main {
                     "No questions found in file!");
         }
 
-        // Object creation
-
         QuizService quizService =
                 new QuizService(questions);
 
-        // Infinite loop for menu
+        // Infinite loop is used for the menu
 
         while (true) {
 
             System.out.println(
-                    "\n===== ONLINE QUIZ APPLICATION =====");
+                    "\n...ONLINE QUIZ APPLICATION...");
 
             System.out.println("1. Start Quiz");
 
@@ -56,8 +45,6 @@ public class Main {
                     "Enter your choice: ");
 
             int choice = 0;
-
-            // Exception handling
 
             try {
 
@@ -73,13 +60,9 @@ public class Main {
                 continue;
             }
 
-            // Switch case
-
             switch (choice) {
 
                 case 1:
-
-                    // Start quiz
 
                     quizService.startQuiz();
 
@@ -87,17 +70,11 @@ public class Main {
 
                 case 2:
 
-                    // Open admin panel
-
                     adminPanel();
-
-                    // Reload updated questions
 
                     questions =
                             FileManager.loadQuestions(
                                     FILE_NAME);
-
-                    // Recreate object
 
                     quizService =
                             new QuizService(questions);
@@ -123,8 +100,6 @@ public class Main {
 
     public static void adminPanel() {
 
-        // Admin password
-
         String adminPassword = "admin123";
 
         sc.nextLine();
@@ -135,8 +110,6 @@ public class Main {
         String enteredPassword =
                 sc.nextLine();
 
-        // Password validation
-
         if (!enteredPassword.equals(adminPassword)) {
 
             System.out.println(
@@ -146,7 +119,7 @@ public class Main {
         }
 
         System.out.println(
-                "\n===== ADMIN PANEL =====");
+                "\n...ADMIN PANEL...");
 
         System.out.println("1. Add Question");
 
@@ -155,6 +128,8 @@ public class Main {
         System.out.println("3. Delete Question");
 
         System.out.println("4. Exit");
+
+        System.out.println("5. View Score History");
 
         System.out.print(
                 "Enter your choice: ");
@@ -188,6 +163,12 @@ public class Main {
 
                 break;
 
+            case 5:
+
+              viewScoreHistory();
+
+                break;
+
             default:
 
                 System.out.println(
@@ -195,15 +176,13 @@ public class Main {
         }
     }
 
-    // Method used to add question
+    // Method used to add questions
 
     public static void addQuestion() {
 
         sc.nextLine();
 
         try {
-
-            // Append mode enabled
 
             FileWriter fw =
                     new FileWriter(
@@ -262,7 +241,6 @@ public class Main {
 
             fw.write(correctAnswer + "\n");
 
-            // Close resource
 
             fw.close();
 
@@ -284,7 +262,7 @@ public class Main {
                 FileManager.loadQuestions(FILE_NAME);
 
         System.out.println(
-                "\n===== ALL QUESTIONS =====");
+                "\n...ALL QUESTIONS...");
 
         // Enhanced for loop
 
@@ -330,9 +308,9 @@ public class Main {
         }
 
         System.out.println(
-                "\n===== DELETE QUESTION =====");
+                "\n...DELETE QUESTION...");
 
-        // Display questions
+        // for displaying questions
 
         for (int i = 0;
              i < questions.size();
@@ -362,13 +340,9 @@ public class Main {
             return;
         }
 
-        // Remove question
-
         questions.remove(deleteIndex);
 
         try {
-
-            // Rewrite entire file
 
             FileWriter fw =
                     new FileWriter(FILE_NAME);
@@ -407,5 +381,38 @@ public class Main {
             System.out.println(
                     "Error deleting question!");
         }
+ }
+    // Method used to display score history
+
+    public static void viewScoreHistory() {
+
+    System.out.println(
+            "\n...SCORE HISTORY...");
+
+    try {
+
+        // BufferedReader used for reading file
+
+        java.io.BufferedReader br =
+                new java.io.BufferedReader(
+                        new java.io.FileReader(
+                                "scoreHistory.txt"));
+
+        String line;
+
+        // Read file line by line
+
+        while ((line = br.readLine()) != null) {
+
+            System.out.println(line);
+        }
+
+        br.close();
+
+    } catch (IOException e) {
+
+        System.out.println(
+                "Error reading score history!");
     }
+}
 }
