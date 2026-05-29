@@ -23,6 +23,8 @@ public class Main {
 
             System.out.println(
                     "No questions found in file!");
+
+                 return;
         }
 
         QuizService quizService =
@@ -35,11 +37,13 @@ public class Main {
             System.out.println(
                     "\n...ONLINE QUIZ APPLICATION...");
 
-            System.out.println("1. Start Quiz");
+            System.out.println("1. Register");
 
-            System.out.println("2. Admin Panel");
+            System.out.println("2. Login");
 
-            System.out.println("3. Exit");
+            System.out.println("3. Admin Panel");
+
+            System.out.println("4. Exit");
 
             System.out.print(
                     "Enter your choice: ");
@@ -62,37 +66,59 @@ public class Main {
 
             switch (choice) {
 
-                case 1:
+    case 1:
 
-                    quizService.startQuiz();
+        // Register new user
 
-                    break;
+        Auth_Service.registerUser();
 
-                case 2:
+        break;
 
-                    adminPanel();
+    case 2:
 
-                    questions =
-                            FileManager.loadQuestions(
-                                    FILE_NAME);
+        // Login validation
 
-                    quizService =
-                            new QuizService(questions);
+        boolean loginSuccess =
+                Auth_Service.loginUser();
 
-                    break;
+        // Start quiz only if login success
 
-                case 3:
+        if (loginSuccess) {
 
-                    System.out.println(
-                            "Thank You for using Quiz Application!");
+            quizService.startQuiz();
+        }
 
-                    System.exit(0);
+        break;
 
-                default:
+    case 3:
 
-                    System.out.println(
-                            "Invalid choice!");
-            }
+        adminPanel();
+
+        // Reload updated questions
+
+        questions =
+                FileManager.loadQuestions(
+                        FILE_NAME);
+
+        // Recreate object
+
+        quizService =
+                new QuizService(questions);
+
+        break;
+
+    case 4:
+
+        System.out.println(
+                "Thank You for using Quiz Application!");
+
+        System.exit(0);
+
+    default:
+
+        System.out.println(
+                "Invalid choice!");
+}
         }
     }
 
@@ -328,8 +354,6 @@ public class Main {
 
         int deleteIndex =
                 sc.nextInt() - 1;
-
-        // Validation
 
         if (deleteIndex < 0
                 || deleteIndex >= questions.size()) {
